@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/sales")
@@ -72,4 +73,31 @@ public class SaleController {
         service.callProcedure4();
         return ResponseEntity.notFound().build();
     }
+
+    //========== Queries Complejos ========
+    @GetMapping("/mostExpensive")
+    public ResponseEntity<SaleDTO> getMostExpensive(){
+        SaleDTO dto = mapperUtil.map(service.getSaleMostExpensive(), SaleDTO.class);
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/bestseller")
+    public ResponseEntity<String> getBestSeller(){
+        String username = service.getBestSellerPerson();
+        return ResponseEntity.ok(username);
+    }
+
+    @GetMapping("/sellercount")
+    public ResponseEntity<Map<String, Long>> getSellerCount(){
+        Map<String, Long> byUserCount = service.getSaleCountBySeller();
+        return ResponseEntity.ok(byUserCount);
+    }
+
+    @GetMapping("/sellerproduct")
+    public ResponseEntity<Map<String, Double>> getSellerProduct(){
+        Map<String, Double> bySellerProduct = service.getMostSellerProduct();
+        return ResponseEntity.ok(bySellerProduct);
+    }
+
+
 }
