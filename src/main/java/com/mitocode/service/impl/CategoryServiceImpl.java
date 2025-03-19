@@ -1,11 +1,13 @@
 package com.mitocode.service.impl;
 
-import com.mitocode.dto.CategoryDTO;
 import com.mitocode.model.Category;
 import com.mitocode.repository.ICategoryRepository;
 import com.mitocode.repository.IGenericRepository;
 import com.mitocode.service.ICategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,5 +51,16 @@ public class CategoryServiceImpl extends ICRUDImpl <Category, Integer> implement
     @Override
     public List<Category> getNameAndDescription2(String name, String description) {
         return repository.getNameAndDescription2(name, description);
+    }
+
+    @Override
+    public Page<Category> findPage(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
+    @Override
+    public List<Category> findAllOrder(String param) {
+        Sort.Direction direction = param.equals("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        return repository.findAll(Sort.by(direction, "IdCategory", "name"));
     }
 }
