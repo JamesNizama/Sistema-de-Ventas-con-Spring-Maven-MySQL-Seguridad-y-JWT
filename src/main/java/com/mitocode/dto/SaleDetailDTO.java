@@ -20,7 +20,7 @@ public class SaleDetailDTO {
 
     @NotNull
     @JsonIncludeProperties(value = "idProduct")
-    private ProdcutDTO product;
+    private ProductDTO product;
 
     @NotNull
     @Min(value = 1)

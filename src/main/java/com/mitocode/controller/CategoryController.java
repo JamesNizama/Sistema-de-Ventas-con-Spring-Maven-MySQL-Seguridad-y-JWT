@@ -1,6 +1,7 @@
 package com.mitocode.controller;
 
 import com.mitocode.dto.CategoryDTO;
+import com.mitocode.dto.GenericResponse;
 import com.mitocode.model.Category;
 import com.mitocode.service.ICategoryService;
 import com.mitocode.util.MapperUtil;
@@ -38,6 +39,7 @@ public class CategoryController {
 //                .map(this::convertToDto).toList();
         List<CategoryDTO> list = mapperUtil.mapList(service.findAll(), CategoryDTO.class, "categoryModelMapper");
         return ResponseEntity.ok(list);
+
     }
 
     @GetMapping("/{id}")

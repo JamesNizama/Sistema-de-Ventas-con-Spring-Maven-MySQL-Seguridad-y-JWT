@@ -1,6 +1,8 @@
 package com.mitocode.controller;
 
-import com.mitocode.dto.ProdcutDTO;
+import com.mitocode.dto.CategoryDTO;
+import com.mitocode.dto.GenericResponse;
+import com.mitocode.dto.ProductDTO;
 import com.mitocode.model.Product;
 import com.mitocode.service.IProductService;
 import com.mitocode.util.MapperUtil;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -26,29 +29,34 @@ public class ProductController {
     private final MapperUtil mapperUtil;
 
     @GetMapping
-    public ResponseEntity<List<ProdcutDTO>> readAll() throws Exception {
-        List<ProdcutDTO> list = service.findAll()
+    public ResponseEntity<GenericResponse<ProductDTO>> readAll() throws Exception {
+        List<ProductDTO> list = service.findAll()
                 .stream()
                 .map(this::convertToDto).toList();
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok(new GenericResponse<>(200, "success", list));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdcutDTO> readById(@PathVariable("id") Integer id) throws Exception {
+    public ResponseEntity<GenericResponse<ProductDTO>> readById(@PathVariable("id") Integer id) throws Exception {
         Product obj = service.findById(id);
-        return ResponseEntity.ok(convertToDto(obj));
+        ProductDTO dto = convertToDto(obj);
+        return ResponseEntity.ok(new GenericResponse<>(200, "success", Arrays.asList(dto)));
     }
 
     @PostMapping
-    public ResponseEntity<ProdcutDTO> save(@Valid @RequestBody ProdcutDTO productDto) throws Exception {
+    public ResponseEntity<GenericResponse<ProductDTO>> save(@Valid @RequestBody ProductDTO productDto) throws Exception {
         Product obj = service.save(convertToEntity(productDto));
-        return new ResponseEntity<>(convertToDto(obj), HttpStatus.CREATED);
+        ProductDTO dto = convertToDto(obj);
+        return new ResponseEntity<>(
+                new GenericResponse<>(200, "success", Arrays.asList(dto)), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProdcutDTO> update(@Valid @PathVariable("id") Integer id, @RequestBody ProdcutDTO productDTO) throws Exception {
+    public ResponseEntity<GenericResponse<ProductDTO>> update(@Valid @PathVariable("id") Integer id, @RequestBody ProductDTO productDTO) throws Exception {
         Product obj = service.update(id, convertToEntity(productDTO));
-        return new ResponseEntity<>(convertToDto(obj), HttpStatus.OK);
+        ProductDTO dto = convertToDto(obj);
+        return new ResponseEntity<>(
+                new GenericResponse<>(200,"succedd",Arrays.asList(dto)), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -59,20 +67,22 @@ public class ProductController {
         //return ResponseEntity.noContent().build();
     }
 
-    private ProdcutDTO convertToDto(Product obj) {
-        return model.map(obj, ProdcutDTO.class);
+    private ProductDTO convertToDto(Product obj) {
+        return model.map(obj, ProductDTO.class);
     }
 
-    private Product convertToEntity(ProdcutDTO dto) {
+    private Product convertToEntity(ProductDTO dto) {
         return model.map(dto, Product.class);
     }
 
     //================================
     @GetMapping("/get/name")
-    public ResponseEntity<List<ProdcutDTO>> getNameProduct(@RequestParam("name") String name){
-        List<ProdcutDTO> list =
-                mapperUtil.mapList(service.getProductByCategory(name), ProdcutDTO.class);
-        return ResponseEntity.ok(list);
+    public ResponseEntity<GenericResponse<ProductDTO>> getNameProduct(@RequestParam("name") String name){
+        List<ProductDTO> list =
+                mapperUtil.mapList(service.getProductByCategory(name), ProductDTO.class);
+
+        return ResponseEntity.ok(
+                new GenericResponse<>(200, "success", list));
     }
 
 }

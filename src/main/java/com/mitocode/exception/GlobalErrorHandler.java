@@ -1,5 +1,6 @@
 package com.mitocode.exception;
 
+import com.mitocode.dto.GenericResponse;
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,6 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @RestControllerAdvice
 public class GlobalErrorHandler extends ResponseEntityExceptionHandler {
@@ -18,16 +20,22 @@ public class GlobalErrorHandler extends ResponseEntityExceptionHandler {
 //        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 //    }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<CustomErrorResponse> handleDefultException(Exception ex, WebRequest req) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<CustomErrorResponse> handleDefultException(Exception ex, WebRequest req) {
+        CustomErrorResponse errorResponse = new CustomErrorResponse(LocalDateTime.now(), ex.getMessage(), req.getDescription(false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+//    @ExceptionHandler(ModelNotFoundException.class)
+//    public ResponseEntity<CustomErrorResponse> handleNoFoundModelException(ModelNotFoundException ex, WebRequest req) {
 //        CustomErrorResponse errorResponse = new CustomErrorResponse(LocalDateTime.now(), ex.getMessage(), req.getDescription(false));
-//        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
 //    }
 
     @ExceptionHandler(ModelNotFoundException.class)
-    public ResponseEntity<CustomErrorResponse> handleNoFoundModelException(ModelNotFoundException ex, WebRequest req) {
+    public ResponseEntity<GenericResponse<CustomErrorResponse>> handleNoFoundModelException(ModelNotFoundException ex, WebRequest req) {
         CustomErrorResponse errorResponse = new CustomErrorResponse(LocalDateTime.now(), ex.getMessage(), req.getDescription(false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new GenericResponse<>(400, "Error", Arrays.asList(errorResponse)), HttpStatus.NOT_FOUND);
     }
 
 //    //Desde spring booot +3
