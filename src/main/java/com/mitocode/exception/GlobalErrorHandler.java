@@ -26,6 +26,7 @@ public class GlobalErrorHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+
 //    @ExceptionHandler(ModelNotFoundException.class)
 //    public ResponseEntity<CustomErrorResponse> handleNoFoundModelException(ModelNotFoundException ex, WebRequest req) {
 //        CustomErrorResponse errorResponse = new CustomErrorResponse(LocalDateTime.now(), ex.getMessage(), req.getDescription(false));
@@ -37,6 +38,8 @@ public class GlobalErrorHandler extends ResponseEntityExceptionHandler {
         CustomErrorResponse errorResponse = new CustomErrorResponse(LocalDateTime.now(), ex.getMessage(), req.getDescription(false));
         return new ResponseEntity<>(new GenericResponse<>(400, "Error", Arrays.asList(errorResponse)), HttpStatus.NOT_FOUND);
     }
+
+
 
 //    //Desde spring booot +3
 //    @ExceptionHandler(ModelNotFoundException.class)
