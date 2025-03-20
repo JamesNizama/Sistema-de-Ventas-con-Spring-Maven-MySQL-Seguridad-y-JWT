@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-//Clase S2
+//Clase S2 - cambia según
 @Service
 @RequiredArgsConstructor
 public class JwtUserDetailsService implements UserDetailsService {
