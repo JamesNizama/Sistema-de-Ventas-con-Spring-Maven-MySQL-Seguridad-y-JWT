@@ -22,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class CategoryController {
 
 //    @Qualifier("categoryModelMapper")
